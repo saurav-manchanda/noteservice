@@ -16,7 +16,6 @@ import com.bridgelabz.noteservice.model.Note;
 import com.bridgelabz.noteservice.model.NoteDTO;
 import com.bridgelabz.noteservice.utilservice.ToDoException;
 
-
 /**
  * @author Saurav
  *         <p>
@@ -191,7 +190,8 @@ public interface INoteService {
 	 * @throws ToDoException
 	 * @throws ParseException
 	 */
-	String setReminder(String noteId, String remindTime, String userId,String email) throws ToDoException, ParseException;
+	String setReminder(String noteId, String remindTime, String userId, String email)
+			throws ToDoException, ParseException;
 
 	/**
 	 * This method is for searching the Notes by LabelName
@@ -234,4 +234,13 @@ public interface INoteService {
 	 * @throws ToDoException
 	 */
 	List<Note> displayFromTrash(String userId) throws ToDoException;
+
+	/**
+	 * This method is for sorting of the labels present
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws ToDoException
+	 */
+	List<Label> sortingOfLabels(String userId) throws ToDoException;
 }

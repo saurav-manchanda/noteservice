@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -535,6 +536,24 @@ public class NoteServiceImpl implements INoteService {
 		description.setLinkDescription(linkList);
 		logger.info(RESP_ID + "outside makeDescription method");
 		return description;
+	}
+
+	/**
+	 * This method is for sorting the labels
+	 */
+	@Override
+	public List<Label> sortingOfLabels(String userId) throws ToDoException {
+		logger.info(REQ_ID + " Displaying the Labels in Service");
+		List<Label> list = new ArrayList<>();
+		PreCondition.checkNotNull(userId, messages.get("104"));
+		PreCondition.checkNotEmptyString(userId, messages.get("106"));
+		list = labelRepository.findAll();
+
+		Collections.sort(list, (l1, l2) -> {
+			return l1.getLabelName().compareTo(l2.getLabelName());
+		});
+		logger.info(RESP_ID + " The labels are Displayed in Service");
+		return list;
 	}
 
 }

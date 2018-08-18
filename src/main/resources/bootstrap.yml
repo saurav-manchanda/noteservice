@@ -1,6 +1,11 @@
 spring:
   application:
     name: noteservice-eureka-client
+  cloud:
+    config:
+      discovery:
+        service-id: ToDo-config-server
+      uri: http://localhost:8880
 server:
   port: 1996
 eureka:
@@ -10,3 +15,8 @@ eureka:
   instance:
     preferIpAddress: true
     
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,6 @@ import com.bridgelabz.noteservice.utilservice.ResponseDTO;
 import com.bridgelabz.noteservice.utilservice.ToDoException;
 import com.bridgelabz.noteservice.utilservice.ObjectMapper.ObjectMapping;
 
-
 /**
  * @author Saurav
  *         <p>
@@ -45,6 +45,7 @@ import com.bridgelabz.noteservice.utilservice.ObjectMapper.ObjectMapping;
  *         note, reading, updating as well as deleting a note
  *         </p>
  */
+@RefreshScope
 @RestController
 @RequestMapping(value = "/notes")
 public class NoteController {
@@ -428,8 +429,8 @@ public class NoteController {
 			HttpServletRequest request, @RequestHeader("token") String token) throws ToDoException, ParseException {
 		logger.info(REQ_ID + " Setting the Reminder");
 		String userId = request.getHeader("userId");
-		String email=(String) request.getAttribute("email");
-		noteService.setReminder(noteId, remindTime, userId,email);
+		String email = (String) request.getAttribute("email");
+		noteService.setReminder(noteId, remindTime, userId, email);
 		logger.info(RESP_ID + "Label Deleted successfully ");
 		return new ResponseEntity(new ResponseDTO("Reminder set successfully " + noteId, 200), HttpStatus.OK);
 	}
@@ -437,7 +438,7 @@ public class NoteController {
 	/**
 	 * @param request
 	 * @param token
-	 * @returnhn 
+	 * @returnhn
 	 * @throws ToDoException
 	 *             <p>
 	 *             This API is for displaying all the Notes which are in trash
@@ -454,20 +455,47 @@ public class NoteController {
 		logger.info(RESP_ID + " All notes are got to display by the controller");
 		return new ResponseEntity(list, HttpStatus.OK);
 	}
-	@GetMapping(value="/allusers",headers = "Accept=application/json")
-    public ResponseEntity<List<?>>getAllUsers()
-    {
-        logger.info(REQ_ID+" inside getall user service");
-        List<?> user=feign.getAllUsers();
-        
-        if(user.size()==0)
-        {
-            logger.info("user not found");
-            return new ResponseEntity<>( HttpStatus.NOT_FOUND);    
-        }
-        else{
-            logger.info("all users retrieved");
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }
-    }
+
+	/**
+	 * @return ResponseEntity
+	 *         <p>
+	 *         This method is to get all the es=xisting users.
+	 *         </p>
+	 */
+	@GetMapping(value = "/allusers", headers = "Accept=application/json")
+	public ResponseEntity<List<?>> getAllUsers() {
+		logger.info(REQ_ID + " inside getall user service");
+		List<?> user = feign.getAllUsers();
+
+		if (user.size() == 0) {
+			logger.info("user not found");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} else {
+			logger.info("all users retrieved");
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		}
+	}
+
+	/**
+	 * @param request
+	 * @param token
+	 * @return
+	 * @throws ToDoException
+	 *             <p>
+	 *             This method is for sorting of labels
+	 *             </p>
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/sortlabel", method = RequestMethod.GET)
+	public ResponseEntity sortingOfLabel(HttpServletRequest request, @RequestHeader("token") String token)
+			throws ToDoException {
+		logger.info(REQ_ID + " Displaying all labels");
+		logger.info(REQ_ID + " Displaying all labels");
+		String userId = request.getHeader("userId");
+		List<Label> list = null;
+		list = noteService.sortingOfLabels(userId);
+		logger.info(RESP_ID + " All labels are got to display by the controller");
+		return new ResponseEntity(list, HttpStatus.OK);
+	}
+
 }
