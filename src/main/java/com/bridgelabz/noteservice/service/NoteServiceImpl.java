@@ -12,10 +12,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -542,17 +545,66 @@ public class NoteServiceImpl implements INoteService {
 	 * This method is for sorting the labels
 	 */
 	@Override
-	public List<Label> sortingOfLabels(String userId) throws ToDoException {
+	public List<Label> sortingByLabelName(String userId, boolean ascendingOrDescending) throws ToDoException {
 		logger.info(REQ_ID + " Displaying the Labels in Service");
 		List<Label> list = new ArrayList<>();
 		PreCondition.checkNotNull(userId, messages.get("104"));
 		PreCondition.checkNotEmptyString(userId, messages.get("106"));
 		list = labelRepository.findAll();
-
-		Collections.sort(list, (l1, l2) -> {
-			return l1.getLabelName().compareTo(l2.getLabelName());
-		});
+		// Collections.sort(list, (l1, l2) -> {
+		// return l1.getLabelName().compareTo(l2.getLabelName());
+		// });
+		// return
+		// list.stream().sorted((x,y)->x.getLabelName().compareTo(y.getLabelName())).collect(Collectors.toList());
+		if (ascendingOrDescending) {
+			list = list.stream().sorted(Comparator.comparing(Label::getLabelName)).collect(Collectors.toList());
+			logger.info(RESP_ID + " The labels are Displayed in Service");
+			return list;
+		} else
+			list = list.stream().sorted(Comparator.comparing(Label::getLabelName).reversed())
+					.collect(Collectors.toList());
 		logger.info(RESP_ID + " The labels are Displayed in Service");
+		return list;
+	}
+
+	/**
+	 * This method is for sorting the notes according to the title
+	 */
+	@Override
+	public List<Note> sortingNoteByTitle(String userId, boolean ascendingOrDescending) throws ToDoException {
+		logger.info(REQ_ID + " Displaying the Notes in Service");
+		List<Note> list = new ArrayList<>();
+		PreCondition.checkNotNull(userId, messages.get("104"));
+		PreCondition.checkNotEmptyString(userId, messages.get("106"));
+		list = noteRepository.findAll();
+		if (ascendingOrDescending) {
+			list = list.stream().sorted(Comparator.comparing(Note::getTitle)).collect(Collectors.toList());
+			logger.info(RESP_ID + " The notes are Displayed in Service");
+			return list;
+		} else
+			list = list.stream().sorted(Comparator.comparing(Note::getTitle).reversed()).collect(Collectors.toList());
+		logger.info(RESP_ID + " The notes are Displayed in Service");
+		return list;
+	}
+
+	/**
+	 * This method is for sorting the note by date
+	 */
+	@Override
+	public List<Note> sortingNoteByDate(String userId, boolean ascendingOrDescending) throws ToDoException {
+		logger.info(REQ_ID + " Displaying the Notes in Service");
+		List<Note> list = new ArrayList<>();
+		PreCondition.checkNotNull(userId, messages.get("104"));
+		PreCondition.checkNotEmptyString(userId, messages.get("106"));
+		list = noteRepository.findAll();
+		if (ascendingOrDescending) {
+			list = list.stream().sorted(Comparator.comparing(Note::getCreatedDate)).collect(Collectors.toList());
+			logger.info(RESP_ID + " The notes are Displayed in Service");
+			return list;
+		} else
+			list = list.stream().sorted(Comparator.comparing(Note::getCreatedDate).reversed())
+					.collect(Collectors.toList());
+		logger.info(RESP_ID + " The notes are Displayed in Service");
 		return list;
 	}
 

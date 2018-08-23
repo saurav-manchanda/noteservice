@@ -486,16 +486,57 @@ public class NoteController {
 	 *             </p>
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/sortlabel", method = RequestMethod.GET)
-	public ResponseEntity sortingOfLabel(HttpServletRequest request, @RequestHeader("token") String token)
+	@RequestMapping(value = "/sortlabelbyname", method = RequestMethod.GET)
+	public ResponseEntity sortingOfLabelByLabelName(HttpServletRequest request, @RequestHeader("token") String token, @RequestParam("ascendingOrDescending") boolean ascendingOrDescending)
 			throws ToDoException {
 		logger.info(REQ_ID + " Displaying all labels");
 		logger.info(REQ_ID + " Displaying all labels");
 		String userId = request.getHeader("userId");
 		List<Label> list = null;
-		list = noteService.sortingOfLabels(userId);
+		list = noteService.sortingByLabelName(userId,ascendingOrDescending);
 		logger.info(RESP_ID + " All labels are got to display by the controller");
 		return new ResponseEntity(list, HttpStatus.OK);
 	}
-
+	/**
+	 * @param request
+	 * @param token
+	 * @return
+	 * @throws ToDoException
+	 *             <p>
+	 *             This method is for sorting of labels
+	 *             </p>
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/sortnotebytitle", method = RequestMethod.GET)
+	public ResponseEntity sortingOfNoteByTitle(HttpServletRequest request, @RequestHeader("token") String token, @RequestParam("ascendingOrDescending") boolean ascendingOrDescending)
+			throws ToDoException {
+		logger.info(REQ_ID + " Displaying all labels");
+		logger.info(REQ_ID + " Displaying all labels");
+		String userId = request.getHeader("userId");
+		List<Note> list = null;
+		list = noteService.sortingNoteByTitle(userId,ascendingOrDescending);
+		logger.info(RESP_ID + " All labels are got to display by the controller");
+		return new ResponseEntity(list, HttpStatus.OK);
+	}
+	/**
+	 * @param request
+	 * @param token
+	 * @return
+	 * @throws ToDoException
+	 *             <p>
+	 *             This method is for sorting of labels
+	 *             </p>
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/sortnotebydate", method = RequestMethod.GET)
+	public ResponseEntity sortingOfNoteByCreatedDate(HttpServletRequest request, @RequestHeader("token") String token, @RequestParam("ascendingOrDescending") boolean ascendingOrDescending)
+			throws ToDoException {
+		logger.info(REQ_ID + " Displaying all labels");
+		logger.info(REQ_ID + " Displaying all labels");
+		String userId = request.getHeader("userId");
+		List<Note> list = null;
+		list = noteService.sortingNoteByDate(userId,ascendingOrDescending);
+		logger.info(RESP_ID + " All labels are got to display by the controller");
+		return new ResponseEntity(list, HttpStatus.OK);
+	}
 }

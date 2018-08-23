@@ -242,5 +242,25 @@ public interface INoteService {
 	 * @return
 	 * @throws ToDoException
 	 */
-	List<Label> sortingOfLabels(String userId) throws ToDoException;
+	List<Label> sortingByLabelName(String userId, boolean ascendingOrDescending) throws ToDoException;
+
+	/**
+	 * This method is for sorting the note by Note Title
+	 * 
+	 * @param userId
+	 * @param ascendingOrDescending
+	 * @return
+	 * @throws ToDoException
+	 */
+	List<Note> sortingNoteByTitle(String userId, boolean ascendingOrDescending) throws ToDoException;
+
+	/**
+	 * This method is for sorting the Note by Created Date
+	 * 
+	 * @param userId
+	 * @param ascendingOrDescending
+	 * @return
+	 * @throws ToDoException
+	 */
+	List<Note> sortingNoteByDate(String userId, boolean ascendingOrDescending) throws ToDoException;
 }
